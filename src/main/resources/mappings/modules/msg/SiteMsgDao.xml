@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.msg.dao.SiteMsgDao">
+    
+	<sql id="siteMsgColumns">
+		a.phone AS "phone",
+		a.message AS "message",
+		a.id AS "id",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="siteMsgJoins">
+	</sql>
+    
+	<select id="get" resultType="SiteMsg">
+		SELECT 
+			<include refid="siteMsgColumns"/>
+		FROM site_msg a
+		<include refid="siteMsgJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SiteMsg">
+		SELECT 
+			<include refid="siteMsgColumns"/>
+		FROM site_msg a
+		<include refid="siteMsgJoins"/>
+		<where>
+			1=1
+			<if test="phone != null and phone.length() > 0">
+				AND a.phone like concat('%',#{phone},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SiteMsg">
+		SELECT 
+			<include refid="siteMsgColumns"/>
+		FROM site_msg a
+		<include refid="siteMsgJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO site_msg(
+			phone,
+			message,
+			id,
+			createtime
+		) VALUES (
+			#{phone},
+			#{message},
+			#{id},
+			#{createtime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE site_msg SET 	
+			phone = #{phone},
+			message = #{message},
+			createtime = #{createtime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM site_msg
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
